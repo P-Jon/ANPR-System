@@ -2,6 +2,7 @@ import os
 import cv2
 import numpy as np
 import imutils
+import file_handler
 
 # The bulk of this was taught by Nicholas Renotte (nicknochnack)
 # https://github.com/nicknochnack/ANPRwithPython/blob/main/ANPR%20-%20Tutorial.ipynb
@@ -47,19 +48,14 @@ def SaveMaskedImg(image, filename):
     print("Saving file: " + filename)
     cv2.imwrite('Data/Saved_Plates/' + filename, image)
 
-def files(path):  
-    for file in os.listdir(path):
-        if os.path.isfile(os.path.join(path, file)):
-            yield file
-
 def GetLicensePlates():
-    for file in files("Data/GB_Plates/"):
+    for file in file_handler.get_files("Data/GB_Plates/"):
         print("Reading file: " + file)
         img = cv2.imread("Data/GB_Plates/" + file)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-        #edged = CannyEdgeDetection(gray)
-        edged = SobelEdgeDetection(gray)
+        edged = CannyEdgeDetection(gray)
+        #edged = SobelEdgeDetection(gray)
         contours = GetContours(edged)
         location = FindPlate(contours)
 
