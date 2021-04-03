@@ -3,13 +3,23 @@ import cv2
 import numpy as np
 import imutils
 
-# The bulk of this was taught by nicknochnack
+# The bulk of this was taught by Nicholas Renotte (nicknochnack)
 # https://github.com/nicknochnack/ANPRwithPython/blob/main/ANPR%20-%20Tutorial.ipynb
 # I intend to use this as a test then go on to implement ML to robustly detect license plates to perform OCR upon.
 
-def EdgeDetection(gray):
-    bfilter = cv2.bilateralFilter(gray,5,50,50)
+def Filter(gray):
+    return cv2.bilateralFilter(gray,5,50,50)
+
+def CannyEdgeDetection(gray):
+    bfilter = Filter(gray)
     return cv2.Canny(bfilter,40,200)
+
+def SobelEdgeDetection(gray):
+    bfilter = Filter(gray)
+    gx = cv2.Sobel(bfilter, cv2.CV_64F, 1, 0)
+    gy = cv2.Sobel(bfilter, cv2.CV_64F, 0, 1)
+    g = np.sqrt(gx**2 + gy**2)
+    return (g * 255 / g.max()).astype(np.uint8)
 
 def GetContours(edged):
     keypoints = cv2.findContours(edged.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -48,7 +58,8 @@ def GetLicensePlates():
         img = cv2.imread("Data/GB_Plates/" + file)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-        edged = EdgeDetection(gray)
+        #edged = CannyEdgeDetection(gray)
+        edged = SobelEdgeDetection(gray)
         contours = GetContours(edged)
         location = FindPlate(contours)
 
