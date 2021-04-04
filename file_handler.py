@@ -15,12 +15,9 @@ def save_img(image, filename):
     print(image)
     cv2.imwrite(filename, image)
 
-def convert_image_to_greyscale(path):
-    for file in get_files(path):
-        print("Reading file: " + file)
-        img = read_img(path + file)
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        save_img(gray, file)
+def convert_image_to_greyscale(path, file):
+    img = read_img(path + file)
+    return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
 def grab_plates(label_img_path):
     for file in get_files(label_img_path):
@@ -28,10 +25,15 @@ def grab_plates(label_img_path):
 
 def save_label_plates(img_path, save_path):
     for (img, file) in grab_plates(img_path):
-        print("Saving img file: " + file + " to: " + save_path)
-        print("Savepath: " + save_path)
         save_img(img, save_path + file)
 
-def grab_image_plates(label_img_path):
+def grab_image_plates(label_img_path, img_path, save_path):
+    fileList = []
     for (image, file) in grab_plates(label_img_path):
-        print("Grabbed file: " + file)
+        file = file.replace("mask_", '')
+        fileList.append(file)
+
+    for file in get_files(img_path):
+        if file in str(fileList):
+            gray = convert_image_to_greyscale(img_path,file)
+            save_img(gray, save_path + file)
