@@ -4,9 +4,11 @@ import numpy as np
 import imutils
 import file_handler
 
-# The bulk of this was taught by Nicholas Renotte (nicknochnack)
+# The some of this was taught by Nicholas Renotte (nicknochnack)
 # https://github.com/nicknochnack/ANPRwithPython/blob/main/ANPR%20-%20Tutorial.ipynb
 # I intend to use this as a test then go on to implement ML to robustly detect license plates to perform OCR upon.
+
+# Detecting Number Plates using OpenCV
 
 def Filter(gray):
     return cv2.bilateralFilter(gray,5,50,50)
@@ -39,14 +41,14 @@ def GetMask(location, gray, img):
     mask = np.zeros(gray.shape, np.uint8)
     new_image = cv2.drawContours(mask, [location], 0,255, -1)
     new_image = cv2.bitwise_and(img, img, mask=mask)
-    (x,y) = np.where(mask==255)
-    (x1, y1) = (np.min(x), np.min(y))
-    (x2, y2) = (np.max(x), np.max(y))
-    return gray[x1:x2+1, y1:y2+1]  
+    #(x,y) = np.where(mask==255)
+    #(x1, y1) = (np.min(x), np.min(y))
+    #(x2, y2) = (np.max(x), np.max(y))
+    return new_image
 
 def SaveMaskedImg(image, filename):
     print("Saving file: " + filename)
-    cv2.imwrite('Data/Saved_Plates/' + filename, image)
+    cv2.imwrite('Data/Saved_Plates/mask_' + filename, image)
 
 def GetLicensePlates():
     for file in file_handler.get_files("Data/GB_Plates/"):
