@@ -40,7 +40,7 @@ def FindPlate(contours):
 def GetMask(location, gray, img):
     mask = np.zeros(gray.shape, np.uint8)
     new_image = cv2.drawContours(mask, [location], 0,255, -1)
-    new_image = cv2.bitwise_and(img, img, mask=mask)
+    #new_image = cv2.bitwise_and(img, img, mask=mask) Removing because I don't want the image to be included in the mask
     #(x,y) = np.where(mask==255)
     #(x1, y1) = (np.min(x), np.min(y))
     #(x2, y2) = (np.max(x), np.max(y))
