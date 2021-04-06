@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import torch
-from PIL import image
+from PIL import Image
 
 # Guidance being taken from
 # https://pytorch.org/tutorials/intermediate/torchvision_tutorial.html
