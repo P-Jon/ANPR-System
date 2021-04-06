@@ -14,5 +14,11 @@ class NumberPlateDataset(object):
         self.masks = list(sorted(os.listdir(os.path.join(root, "./Data/Label"))))
 
     def __getitem__(self, idx):
-        img_path = os.path.join(self.root, "./Data/Image/")
-        mask_path = os.path.join(self.root, "./Data/Label/")
+        img_path = os.path.join(self.root, "./Data/Image/", self.imgs[idx])
+        mask_path = os.path.join(self.root, "./Data/Label/", self.masks[idx])
+        
+        mask = Image.open(mask_path)
+        mask = np.array(mask)
+
+        obj_id = np.unique(mask)
+
